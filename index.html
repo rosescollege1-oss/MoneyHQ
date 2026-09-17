@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#f7f4ee" />
+  <title>Money HQ</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="toast" class="toast" aria-live="polite"></div>
+
+  <section id="authScreen" class="auth-screen hidden">
+    <div class="auth-card">
+      <div class="brand-mark">$</div>
+      <p class="eyebrow">HOUSEHOLD FINANCE SYSTEM</p>
+      <h1>Money HQ</h1>
+      <p class="muted">One honest place for your money, bills, debt, and checkbook.</p>
+
+      <form id="authForm" class="stack">
+        <label>Email<input id="authEmail" type="email" autocomplete="email" required /></label>
+        <label>Password<input id="authPassword" type="password" minlength="6" autocomplete="current-password" required /></label>
+        <button class="primary" type="submit">Sign in</button>
+      </form>
+      <button id="createAccountBtn" class="secondary full">Create household login</button>
+      <p class="tiny muted">Use one household login on both phones/computers for now. Individual household member accounts can be added later.</p>
+    </div>
+  </section>
+
+  <div id="appShell" class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">$</div>
+        <div>
+          <strong>Money HQ</strong>
+          <span>Household books</span>
+        </div>
+      </div>
+
+      <nav id="nav">
+        <button data-view="dashboard" class="active">Dashboard</button>
+        <button data-view="ledger">Checkbook</button>
+        <button data-view="bills">Bills</button>
+        <button data-view="debts">Debt</button>
+        <button data-view="accounts">Accounts</button>
+        <button data-view="income">Income</button>
+        <button data-view="reports">Reports</button>
+        <button data-view="settings">Settings</button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div id="modeBadge" class="mode-badge">Local test mode</div>
+        <button id="signOutBtn" class="text-btn hidden">Sign out</button>
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" id="todayLabel"></p>
+          <h1 id="viewTitle">Dashboard</h1>
+        </div>
+        <button id="quickAddBtn" class="primary">+ Add transaction</button>
+      </header>
+
+      <section id="dashboardView" class="view active">
+        <div id="setupNotice" class="notice hidden">
+          <div>
+            <strong>Your books are empty.</strong>
+            <p>Add your bank accounts first, then bills and debts. The dashboard will build itself from there.</p>
+          </div>
+          <button data-go="accounts" class="secondary">Start with accounts</button>
+        </div>
+
+        <div class="metric-grid">
+          <article class="metric hero">
+            <span>Safe to spend</span>
+            <strong id="safeToSpend">$0.00</strong>
+            <small id="safeToSpendDetail">after upcoming bills + reserve</small>
+          </article>
+          <article class="metric">
+            <span>Cash available</span>
+            <strong id="cashAvailable">$0.00</strong>
+            <small>checking + savings + cash</small>
+          </article>
+          <article class="metric">
+            <span>Bills before payday</span>
+            <strong id="billsBeforePayday">$0.00</strong>
+            <small id="nextPaydayText">No payday scheduled</small>
+          </article>
+          <article class="metric">
+            <span>Total debt</span>
+            <strong id="totalDebt">$0.00</strong>
+            <small id="debtDetail">$0 minimums / month</small>
+          </article>
+        </div>
+
+        <div class="two-col">
+          <article class="panel">
+            <div class="panel-head">
+              <div><p class="eyebrow">RIGHT NOW</p><h2>Bills that need attention</h2></div>
+              <button data-go="bills" class="text-btn">See all</button>
+            </div>
+            <div id="attentionBills" class="list"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div><p class="eyebrow">THIS MONTH</p><h2>Money in vs. out</h2></div>
+              <button data-go="reports" class="text-btn">Details</button>
+            </div>
+            <div class="money-flow">
+              <div><span>Income</span><strong id="monthIncome">$0.00</strong></div>
+              <div><span>Spent</span><strong id="monthSpent">$0.00</strong></div>
+              <div><span>Net</span><strong id="monthNet">$0.00</strong></div>
+            </div>
+          </article>
+        </div>
+
+        <div class="two-col">
+          <article class="panel">
+            <div class="panel-head">
+              <div><p class="eyebrow">RECENT</p><h2>Checkbook</h2></div>
+              <button data-go="ledger" class="text-btn">Open register</button>
+            </div>
+            <div id="recentTransactions" class="list"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div><p class="eyebrow">DEBT SNAPSHOT</p><h2>What we owe</h2></div>
+              <button data-go="debts" class="text-btn">Debt center</button>
+            </div>
+            <div id="debtSnapshot" class="list"></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="ledgerView" class="view">
+        <div class="section-actions">
+          <div class="filter-row">
+            <input id="ledgerSearch" placeholder="Search merchant, note, category…" />
+            <select id="ledgerAccountFilter"><option value="">All accounts</option></select>
+            <input id="ledgerMonth" type="month" />
+          </div>
+          <button id="addTransactionBtn" class="primary">+ Transaction</button>
+        </div>
+        <article class="panel flush">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Date</th><th>Payee / description</th><th>Category</th><th>Account</th><th class="right">Amount</th><th></th></tr></thead>
+              <tbody id="transactionTable"></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <section id="billsView" class="view">
+        <div class="section-actions">
+          <div><p class="muted">Mark a bill paid only when the payment really left your account.</p></div>
+          <button id="addBillBtn" class="primary">+ Bill</button>
+        </div>
+        <div class="metric-grid compact">
+          <article class="metric"><span>Monthly bills</span><strong id="monthlyBills">$0.00</strong></article>
+          <article class="metric"><span>Still due this month</span><strong id="billsStillDue">$0.00</strong></article>
+          <article class="metric"><span>Overdue</span><strong id="overdueBills">$0.00</strong></article>
+          <article class="metric"><span>Paid this month</span><strong id="paidBills">$0.00</strong></article>
+        </div>
+        <div id="billList" class="card-grid"></div>
+      </section>
+
+      <section id="debtsView" class="view">
+        <div class="section-actions">
+          <div><p class="muted">Credit cards, loans, financing, student debt — all in one place.</p></div>
+          <button id="addDebtBtn" class="primary">+ Debt</button>
+        </div>
+        <div class="metric-grid compact">
+          <article class="metric"><span>Total debt</span><strong id="debtTotal2">$0.00</strong></article>
+          <article class="metric"><span>Minimum payments</span><strong id="minimumTotal">$0.00</strong></article>
+          <article class="metric"><span>Est. monthly interest</span><strong id="interestTotal">$0.00</strong></article>
+          <article class="metric"><span>Highest APR</span><strong id="highestApr">0%</strong></article>
+        </div>
+        <div id="debtList" class="card-grid"></div>
+      </section>
+
+      <section id="accountsView" class="view">
+        <div class="section-actions">
+          <div><p class="muted">Enter today's real balance when creating an account. From then on, the checkbook keeps it moving.</p></div>
+          <button id="addAccountBtn" class="primary">+ Account</button>
+        </div>
+        <div id="accountList" class="card-grid"></div>
+      </section>
+
+      <section id="incomeView" class="view">
+        <div class="section-actions">
+          <div><p class="muted">Schedule expected paychecks so the app knows what must survive until payday.</p></div>
+          <button id="addIncomeBtn" class="primary">+ Income schedule</button>
+        </div>
+        <div id="incomeList" class="card-grid"></div>
+      </section>
+
+      <section id="reportsView" class="view">
+        <div class="section-actions">
+          <input id="reportMonth" type="month" />
+          <div class="button-row">
+            <button id="exportCsvBtn" class="secondary">Export transactions CSV</button>
+            <button id="backupBtn" class="secondary">Download full backup</button>
+          </div>
+        </div>
+        <div class="metric-grid compact">
+          <article class="metric"><span>Income</span><strong id="reportIncome">$0.00</strong></article>
+          <article class="metric"><span>Expenses</span><strong id="reportExpenses">$0.00</strong></article>
+          <article class="metric"><span>Net cash flow</span><strong id="reportNet">$0.00</strong></article>
+          <article class="metric"><span>Transactions</span><strong id="reportCount">0</strong></article>
+        </div>
+        <div class="two-col">
+          <article class="panel">
+            <div class="panel-head"><div><p class="eyebrow">SPENDING</p><h2>By category</h2></div></div>
+            <div id="categoryReport" class="bars"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-head"><div><p class="eyebrow">TOP PAYEES</p><h2>Where money went</h2></div></div>
+            <div id="merchantReport" class="list"></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="settingsView" class="view">
+        <div class="two-col">
+          <article class="panel">
+            <div class="panel-head"><div><p class="eyebrow">SAFETY BUFFER</p><h2>Protected cash</h2></div></div>
+            <p class="muted">Money HQ subtracts this from “Safe to spend” so your bank balance never looks more available than it really is.</p>
+            <form id="settingsForm" class="stack">
+              <label>Keep at least this much untouched
+                <input id="reserveAmount" type="number" step="0.01" min="0" />
+              </label>
+              <button class="primary" type="submit">Save settings</button>
+            </form>
+          </article>
+          <article class="panel">
+            <div class="panel-head"><div><p class="eyebrow">PRIVATE IMPORT</p><h2>Import 2026 Ledger</h2></div></div>
+            <p class="muted">Choose the private Money HQ import JSON on your own device. The file is read locally by the browser and written into your signed-in database; it never belongs in the public GitHub repository.</p>
+            <div class="stack">
+              <input id="importLedgerFile" type="file" accept=".json,application/json" />
+              <button id="importLedgerBtn" class="primary" type="button">Import ledger into Money HQ</button>
+              <p id="importStatus" class="tiny muted">No import loaded yet.</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="two-col">
+          <article class="panel">
+            <div class="panel-head"><div><p class="eyebrow">IMPORT REVIEW</p><h2>Things to verify</h2></div></div>
+            <p class="muted">I preserve the spreadsheet rather than silently deleting suspicious rows. Anything that may be duplicated is listed here for you to verify later.</p>
+            <div id="reviewFlagsList" class="list"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-head"><div><p class="eyebrow">DATA</p><h2>How this version works</h2></div></div>
+            <p id="dataModeText"></p>
+            <p class="muted">Transfers, savings movements, and credit-card payments are excluded from spending reports so card purchases are not double counted. Imported month-only history displays as a month instead of pretending an exact day was recorded.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="modal">
+    <div class="modal-head">
+      <div><p class="eyebrow" id="modalEyebrow">MONEY HQ</p><h2 id="modalTitle">Add item</h2></div>
+      <button id="closeModal" class="icon-btn" aria-label="Close">×</button>
+    </div>
+    <div id="modalBody"></div>
+  </dialog>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
