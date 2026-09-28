@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#f7f4ee" />
+  <meta name="theme-color" content="#fff7f1" />
   <title>Money HQ</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -13,17 +13,16 @@
   <section id="authScreen" class="auth-screen hidden">
     <div class="auth-card">
       <div class="brand-mark">$</div>
-      <p class="eyebrow">HOUSEHOLD FINANCE SYSTEM</p>
+      <p class="eyebrow">HOUSEHOLD MONEY, WITHOUT THE CHAOS</p>
       <h1>Money HQ</h1>
-      <p class="muted">One honest place for your money, bills, debt, and checkbook.</p>
-
+      <p class="muted">Your colorful little command center for bills, debt, cash, goals, and the real answer to “can we afford this?”</p>
       <form id="authForm" class="stack">
         <label>Email<input id="authEmail" type="email" autocomplete="email" required /></label>
         <label>Password<input id="authPassword" type="password" minlength="6" autocomplete="current-password" required /></label>
         <button class="primary" type="submit">Sign in</button>
       </form>
       <button id="createAccountBtn" class="secondary full">Create household login</button>
-      <p class="tiny muted">Use one household login on both phones/computers for now. Individual household member accounts can be added later.</p>
+      <p class="tiny muted">One shared household login is fine for now. Separate member accounts can come later.</p>
     </div>
   </section>
 
@@ -31,24 +30,22 @@
     <aside class="sidebar">
       <div class="brand">
         <div class="brand-mark">$</div>
-        <div>
-          <strong>Money HQ</strong>
-          <span>Household books</span>
-        </div>
+        <div><strong>Money HQ</strong><span>household command center</span></div>
       </div>
 
       <nav id="nav">
-        <button data-view="dashboard" class="active">Dashboard</button>
-        <button data-view="ledger">Checkbook</button>
-        <button data-view="bills">Bills</button>
-        <button data-view="debts">Debt</button>
-        <button data-view="accounts">Accounts</button>
-        <button data-view="income">Income</button>
-        <button data-view="reports">Reports</button>
-        <button data-view="settings">Settings</button>
+        <button data-view="dashboard" class="active"><span>🏠</span> Home</button>
+        <button data-view="ledger"><span>🧾</span> Checkbook</button>
+        <button data-view="calendar"><span>🗓️</span> Calendar</button>
+        <button data-view="bills"><span>💌</span> Bills</button>
+        <button data-view="debts"><span>💳</span> Debt</button>
+        <button data-view="accounts"><span>🏦</span> Accounts</button>
+        <button data-view="reports"><span>📊</span> Reports</button>
+        <button data-view="goals"><span>🎯</span> Goals</button>
       </nav>
 
       <div class="sidebar-bottom">
+        <button data-view="settings" class="settings-link"><span>⚙️</span> Settings</button>
         <div id="modeBadge" class="mode-badge">Local test mode</div>
         <button id="signOutBtn" class="text-btn hidden">Sign out</button>
       </div>
@@ -58,220 +55,147 @@
       <header class="topbar">
         <div>
           <p class="eyebrow" id="todayLabel"></p>
-          <h1 id="viewTitle">Dashboard</h1>
+          <h1 id="viewTitle">Home</h1>
         </div>
-        <button id="quickAddBtn" class="primary">+ Add transaction</button>
+        <button id="quickAddBtn" class="primary quick-add">＋ Add transaction</button>
       </header>
 
       <section id="dashboardView" class="view active">
         <div id="setupNotice" class="notice hidden">
-          <div>
-            <strong>Your books are empty.</strong>
-            <p>Add your bank accounts first, then bills and debts. The dashboard will build itself from there.</p>
-          </div>
+          <div><strong>Let’s get the books grounded.</strong><p>Add accounts, bills, debts, and income schedules. Everything else builds from those.</p></div>
           <button data-go="accounts" class="secondary">Start with accounts</button>
         </div>
 
-        <div class="metric-grid">
-          <article class="metric hero">
-            <span>Safe to spend</span>
-            <strong id="safeToSpend">$0.00</strong>
-            <small id="safeToSpendDetail">after upcoming bills + reserve</small>
-          </article>
-          <article class="metric">
-            <span>Cash available</span>
-            <strong id="cashAvailable">$0.00</strong>
-            <small>checking + savings + cash</small>
-          </article>
-          <article class="metric">
-            <span>Bills before payday</span>
-            <strong id="billsBeforePayday">$0.00</strong>
-            <small id="nextPaydayText">No payday scheduled</small>
-          </article>
-          <article class="metric">
-            <span>Total debt</span>
-            <strong id="totalDebt">$0.00</strong>
-            <small id="debtDetail">$0 minimums / month</small>
-          </article>
+        <div class="hero-strip">
+          <article class="metric metric-coral hero-metric"><div class="metric-icon">💸</div><span>Safe to spend</span><strong id="safeToSpend">$0.00</strong><small id="safeToSpendDetail">after bills + protected cash</small></article>
+          <article class="metric metric-blue"><div class="metric-icon">💰</div><span>Cash available</span><strong id="cashAvailable">$0.00</strong><small>only accounts you chose for Safe to Spend</small></article>
+          <article class="metric metric-yellow"><div class="metric-icon">📅</div><span>Due before payday</span><strong id="billsBeforePayday">$0.00</strong><small id="nextPaydayText">No payday scheduled</small></article>
+          <article class="metric metric-plum"><div class="metric-icon">💳</div><span>Total debt</span><strong id="totalDebt">$0.00</strong><small id="debtDetail">minimums still need setup</small></article>
         </div>
 
-        <div class="two-col">
-          <article class="panel">
-            <div class="panel-head">
-              <div><p class="eyebrow">RIGHT NOW</p><h2>Bills that need attention</h2></div>
-              <button data-go="bills" class="text-btn">See all</button>
+        <div class="dashboard-grid">
+          <article class="panel afford-card span-2">
+            <div class="panel-head"><div><p class="eyebrow">WHAT CAN WE AFFORD RIGHT NOW?</p><h2>The number that matters today</h2></div><span class="spark">✨</span></div>
+            <div class="afford-grid">
+              <div><span>Cash on hand</span><strong id="affordCash">$0</strong></div>
+              <div><span>Bills before income</span><strong id="affordBills">$0</strong></div>
+              <div><span>Protected cash</span><strong id="affordReserve">$0</strong></div>
+              <div class="afford-answer"><span>Available</span><strong id="affordAvailable">$0</strong></div>
             </div>
-            <div id="attentionBills" class="list"></div>
+            <div class="daily-flex"><span id="daysToIncome">No income date yet</span><strong id="dailyFlexible">—</strong><small>flexible dollars per day until the next scheduled income</small></div>
           </article>
 
           <article class="panel">
-            <div class="panel-head">
-              <div><p class="eyebrow">THIS MONTH</p><h2>Money in vs. out</h2></div>
-              <button data-go="reports" class="text-btn">Details</button>
-            </div>
-            <div class="money-flow">
-              <div><span>Income</span><strong id="monthIncome">$0.00</strong></div>
-              <div><span>Spent</span><strong id="monthSpent">$0.00</strong></div>
-              <div><span>Net</span><strong id="monthNet">$0.00</strong></div>
-            </div>
-          </article>
-        </div>
-
-        <div class="two-col">
-          <article class="panel">
-            <div class="panel-head">
-              <div><p class="eyebrow">RECENT</p><h2>Checkbook</h2></div>
-              <button data-go="ledger" class="text-btn">Open register</button>
-            </div>
-            <div id="recentTransactions" class="list"></div>
+            <div class="panel-head"><div><p class="eyebrow">NEXT UP</p><h2>Upcoming money</h2></div><button data-go="calendar" class="text-btn">Calendar</button></div>
+            <div id="upcomingMoney" class="list"></div>
           </article>
 
           <article class="panel">
-            <div class="panel-head">
-              <div><p class="eyebrow">DEBT SNAPSHOT</p><h2>What we owe</h2></div>
-              <button data-go="debts" class="text-btn">Debt center</button>
-            </div>
+            <div class="panel-head"><div><p class="eyebrow">THIS MONTH</p><h2>Bill progress</h2></div><button data-go="bills" class="text-btn">Bills</button></div>
+            <div class="progress-hero"><div class="progress-ring" id="billProgressRing"><span id="billProgressPct">0%</span></div><div><strong id="billProgressLabel">0 of 0 handled</strong><p class="muted" id="billProgressAmount">$0 still due</p></div></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head"><div><p class="eyebrow">THIS MONTH</p><h2>Money in vs. out</h2></div><button data-go="reports" class="text-btn">Details</button></div>
+            <div class="money-flow"><div><span>Income</span><strong id="monthIncome">$0.00</strong></div><div><span>Spent</span><strong id="monthSpent">$0.00</strong></div><div><span>Net</span><strong id="monthNet">$0.00</strong></div></div>
+            <p id="monthComparison" class="tiny muted comparison-note"></p>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head"><div><p class="eyebrow">DEBT MOMENTUM</p><h2>What we owe</h2></div><button data-go="debts" class="text-btn">Debt center</button></div>
             <div id="debtSnapshot" class="list"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head"><div><p class="eyebrow">GOALS</p><h2>Things we’re building toward</h2></div><button data-go="goals" class="text-btn">Goals</button></div>
+            <div id="dashboardGoals" class="list"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head"><div><p class="eyebrow">MONEY TO-DOS</p><h2>Administrative nonsense</h2></div><button data-go="goals" class="text-btn">Tasks</button></div>
+            <div id="dashboardTasks" class="list"></div>
+          </article>
+
+          <article class="panel span-2">
+            <div class="panel-head"><div><p class="eyebrow">RECENT</p><h2>Checkbook</h2></div><button data-go="ledger" class="text-btn">Open register</button></div>
+            <div id="recentTransactions" class="list compact-list"></div>
           </article>
         </div>
       </section>
 
       <section id="ledgerView" class="view">
         <div class="section-actions">
-          <div class="filter-row">
+          <div class="filter-row wide-filters">
             <input id="ledgerSearch" placeholder="Search merchant, note, category…" />
             <select id="ledgerAccountFilter"><option value="">All accounts</option></select>
+            <select id="ledgerCategoryFilter"><option value="">All categories</option></select>
+            <select id="ledgerTypeFilter"><option value="">All types</option><option value="expense">Expenses</option><option value="income">Income</option><option value="refund">Refunds</option><option value="transfer">Transfers</option></select>
             <input id="ledgerMonth" type="month" />
           </div>
-          <button id="addTransactionBtn" class="primary">+ Transaction</button>
+          <button id="addTransactionBtn" class="primary">＋ Transaction</button>
         </div>
-        <article class="panel flush">
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Date</th><th>Payee / description</th><th>Category</th><th>Account</th><th class="right">Amount</th><th></th></tr></thead>
-              <tbody id="transactionTable"></tbody>
-            </table>
-          </div>
-        </article>
+        <article class="panel flush"><div class="table-wrap"><table><thead><tr><th>Date</th><th>Payee / description</th><th>Category</th><th>Account</th><th class="right">Amount</th><th></th></tr></thead><tbody id="transactionTable"></tbody></table></div></article>
+      </section>
+
+      <section id="calendarView" class="view">
+        <div class="section-actions calendar-actions"><div class="calendar-nav"><button id="prevCalendarMonth" class="secondary">←</button><h2 id="calendarMonthLabel">Month</h2><button id="nextCalendarMonth" class="secondary">→</button><button id="todayCalendarBtn" class="text-btn">Today</button></div><button id="calendarAddBill" class="primary">＋ Bill</button></div>
+        <div class="upcoming-window-grid">
+          <article class="mini-metric coral"><span>Next 7 days</span><strong id="due7">$0</strong><small id="due7Count">0 bills</small></article>
+          <article class="mini-metric yellow"><span>Next 14 days</span><strong id="due14">$0</strong><small id="due14Count">0 bills</small></article>
+          <article class="mini-metric blue"><span>Next 30 days</span><strong id="due30">$0</strong><small id="due30Count">0 bills</small></article>
+          <article class="mini-metric sage"><span>Income next 30 days</span><strong id="income30">$0</strong><small id="income30Count">0 deposits</small></article>
+        </div>
+        <div class="calendar-layout">
+          <article class="panel calendar-panel"><div class="calendar-weekdays"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div><div id="calendarGrid" class="calendar-grid"></div></article>
+          <aside class="panel paycheck-panel"><div class="panel-head"><div><p class="eyebrow">PAYCHECK SURVIVAL</p><h2>Until the next income</h2></div></div><div id="paycheckPlanner"></div></aside>
+        </div>
       </section>
 
       <section id="billsView" class="view">
-        <div class="section-actions">
-          <div><p class="muted">Mark a bill paid only when the payment really left your account.</p></div>
-          <button id="addBillBtn" class="primary">+ Bill</button>
-        </div>
-        <div class="metric-grid compact">
-          <article class="metric"><span>Monthly bills</span><strong id="monthlyBills">$0.00</strong></article>
-          <article class="metric"><span>Still due this month</span><strong id="billsStillDue">$0.00</strong></article>
-          <article class="metric"><span>Overdue</span><strong id="overdueBills">$0.00</strong></article>
-          <article class="metric"><span>Paid this month</span><strong id="paidBills">$0.00</strong></article>
-        </div>
+        <div class="section-actions"><div><p class="muted">The goal is simple: know what is paid, what is coming, and what is sneaking around on autopay.</p></div><button id="addBillBtn" class="primary">＋ Bill</button></div>
+        <div class="metric-grid compact colorful"><article class="metric metric-coral"><span>Monthly bills</span><strong id="monthlyBills">$0.00</strong></article><article class="metric metric-yellow"><span>Still due</span><strong id="billsStillDue">$0.00</strong></article><article class="metric metric-plum"><span>Overdue</span><strong id="overdueBills">$0.00</strong></article><article class="metric metric-sage"><span>Paid this month</span><strong id="paidBills">$0.00</strong></article></div>
+        <article class="panel subscription-panel"><div class="panel-head"><div><p class="eyebrow">THE TINY GOBLINS</p><h2>Subscriptions</h2></div><strong id="subscriptionTotal">$0/mo</strong></div><div id="subscriptionList" class="chip-list"></div></article>
         <div id="billList" class="card-grid"></div>
       </section>
 
       <section id="debtsView" class="view">
-        <div class="section-actions">
-          <div><p class="muted">Credit cards, loans, financing, student debt — all in one place.</p></div>
-          <button id="addDebtBtn" class="primary">+ Debt</button>
-        </div>
-        <div class="metric-grid compact">
-          <article class="metric"><span>Total debt</span><strong id="debtTotal2">$0.00</strong></article>
-          <article class="metric"><span>Minimum payments</span><strong id="minimumTotal">$0.00</strong></article>
-          <article class="metric"><span>Est. monthly interest</span><strong id="interestTotal">$0.00</strong></article>
-          <article class="metric"><span>Highest APR</span><strong id="highestApr">0%</strong></article>
-        </div>
+        <div class="section-actions"><div><p class="muted">Balances, APRs, minimums, utilization, progress, and payoff scenarios in one place.</p></div><button id="addDebtBtn" class="primary">＋ Debt</button></div>
+        <div class="metric-grid compact colorful"><article class="metric metric-plum"><span>Total debt</span><strong id="debtTotal2">$0.00</strong></article><article class="metric metric-coral"><span>Minimum payments</span><strong id="minimumTotal">$0.00</strong></article><article class="metric metric-yellow"><span>Est. monthly interest</span><strong id="interestTotal">$0.00</strong></article><article class="metric metric-blue"><span>Highest APR</span><strong id="highestApr">0%</strong></article></div>
+        <article class="panel simulator-panel"><div class="panel-head"><div><p class="eyebrow">WHAT IF?</p><h2>Debt payoff simulator</h2></div></div><div class="simulator-controls"><label>Extra money toward debt each month<input id="simExtra" type="number" min="0" step="25" value="0" /></label><button id="runSimulatorBtn" class="secondary">Run scenarios</button></div><p class="tiny muted">This is a planning model, not a promise. Missing APRs or minimums make the estimate less precise.</p><div id="simulatorResults" class="scenario-grid"></div></article>
         <div id="debtList" class="card-grid"></div>
       </section>
 
       <section id="accountsView" class="view">
-        <div class="section-actions">
-          <div><p class="muted">Enter today's real balance when creating an account. From then on, the checkbook keeps it moving.</p></div>
-          <button id="addAccountBtn" class="primary">+ Account</button>
-        </div>
+        <div class="section-actions"><div><p class="muted">Cash, savings, retirement, investments, and credit accounts — with Safe to Spend kept intentionally separate.</p></div><button id="addAccountBtn" class="primary">＋ Account</button></div>
+        <div class="metric-grid compact colorful"><article class="metric metric-blue"><span>Tracked assets</span><strong id="trackedAssets">$0</strong></article><article class="metric metric-sage"><span>Safe-to-Spend cash</span><strong id="accountCashTotal">$0</strong></article><article class="metric metric-peach"><span>Savings + investments</span><strong id="savingsInvestments">$0</strong></article><article class="metric metric-plum"><span>Tracked net worth</span><strong id="netWorthTotal">$0</strong></article></div>
         <div id="accountList" class="card-grid"></div>
-      </section>
-
-      <section id="incomeView" class="view">
-        <div class="section-actions">
-          <div><p class="muted">Schedule expected paychecks so the app knows what must survive until payday.</p></div>
-          <button id="addIncomeBtn" class="primary">+ Income schedule</button>
-        </div>
-        <div id="incomeList" class="card-grid"></div>
+        <article class="panel income-panel"><div class="panel-head"><div><p class="eyebrow">RECURRING INCOME</p><h2>Expected deposits</h2></div><button id="addIncomeBtn" class="secondary">＋ Income schedule</button></div><div id="incomeList" class="card-grid mini-cards"></div></article>
       </section>
 
       <section id="reportsView" class="view">
-        <div class="section-actions">
-          <input id="reportMonth" type="month" />
-          <div class="button-row">
-            <button id="exportCsvBtn" class="secondary">Export transactions CSV</button>
-            <button id="backupBtn" class="secondary">Download full backup</button>
-          </div>
-        </div>
-        <div class="metric-grid compact">
-          <article class="metric"><span>Income</span><strong id="reportIncome">$0.00</strong></article>
-          <article class="metric"><span>Expenses</span><strong id="reportExpenses">$0.00</strong></article>
-          <article class="metric"><span>Net cash flow</span><strong id="reportNet">$0.00</strong></article>
-          <article class="metric"><span>Transactions</span><strong id="reportCount">0</strong></article>
-        </div>
-        <div class="two-col">
-          <article class="panel">
-            <div class="panel-head"><div><p class="eyebrow">SPENDING</p><h2>By category</h2></div></div>
-            <div id="categoryReport" class="bars"></div>
-          </article>
-          <article class="panel">
-            <div class="panel-head"><div><p class="eyebrow">TOP PAYEES</p><h2>Where money went</h2></div></div>
-            <div id="merchantReport" class="list"></div>
-          </article>
-        </div>
+        <div class="section-actions"><input id="reportMonth" type="month" /><div class="button-row"><button id="exportCsvBtn" class="secondary">Export CSV</button><button id="backupBtn" class="secondary">Download backup</button></div></div>
+        <div class="metric-grid compact colorful"><article class="metric metric-sage"><span>Income</span><strong id="reportIncome">$0.00</strong></article><article class="metric metric-coral"><span>Expenses</span><strong id="reportExpenses">$0.00</strong></article><article class="metric metric-blue"><span>Net cash flow</span><strong id="reportNet">$0.00</strong></article><article class="metric metric-yellow"><span>Transactions</span><strong id="reportCount">0</strong></article></div>
+        <div class="two-col"><article class="panel"><div class="panel-head"><div><p class="eyebrow">MONTHLY RECAP</p><h2>What changed?</h2></div></div><div id="monthlyRecap"></div></article><article class="panel"><div class="panel-head"><div><p class="eyebrow">TOP PAYEES</p><h2>Where money went</h2></div></div><div id="merchantReport" class="list"></div></article></div>
+        <article class="panel"><div class="panel-head"><div><p class="eyebrow">GUARDRAILS</p><h2>Spending by category</h2></div><button id="addGuardrailBtn" class="secondary">＋ Guardrail</button></div><div id="categoryReport" class="guardrail-list"></div></article>
+      </section>
+
+      <section id="goalsView" class="view">
+        <div class="section-actions"><div><p class="muted">Sinking funds and future plans live here. These are tracking goals — they do not automatically move money between bank accounts.</p></div><button id="addGoalBtn" class="primary">＋ Goal</button></div>
+        <div id="goalList" class="card-grid goal-grid"></div>
+        <div class="two-col goals-bottom"><article class="panel"><div class="panel-head"><div><p class="eyebrow">MONEY TASKS</p><h2>Stuff that needs handled</h2></div><button id="addMoneyTaskBtn" class="secondary">＋ Task</button></div><div id="moneyTaskList" class="task-list"></div></article><article class="panel"><div class="panel-head"><div><p class="eyebrow">GOAL SNAPSHOT</p><h2>Progress</h2></div></div><div id="goalSummary"></div></article></div>
       </section>
 
       <section id="settingsView" class="view">
         <div class="two-col">
-          <article class="panel">
-            <div class="panel-head"><div><p class="eyebrow">SAFETY BUFFER</p><h2>Protected cash</h2></div></div>
-            <p class="muted">Money HQ subtracts this from “Safe to spend” so your bank balance never looks more available than it really is.</p>
-            <form id="settingsForm" class="stack">
-              <label>Keep at least this much untouched
-                <input id="reserveAmount" type="number" step="0.01" min="0" />
-              </label>
-              <button class="primary" type="submit">Save settings</button>
-            </form>
-          </article>
-          <article class="panel">
-            <div class="panel-head"><div><p class="eyebrow">PRIVATE IMPORT</p><h2>Import 2026 Ledger</h2></div></div>
-            <p class="muted">Choose the private Money HQ import JSON on your own device. The file is read locally by the browser and written into your signed-in database; it never belongs in the public GitHub repository.</p>
-            <div class="stack">
-              <input id="importLedgerFile" type="file" accept=".json,application/json" />
-              <button id="importLedgerBtn" class="primary" type="button">Import ledger into Money HQ</button>
-              <p id="importStatus" class="tiny muted">No import loaded yet.</p>
-            </div>
-          </article>
+          <article class="panel"><div class="panel-head"><div><p class="eyebrow">SAFETY BUFFER</p><h2>Protected cash</h2></div></div><p class="muted">Money HQ subtracts this from Safe to Spend so the account balance never looks more available than it really is.</p><form id="settingsForm" class="stack"><label>Keep at least this much untouched<input id="reserveAmount" type="number" step="0.01" min="0" /></label><button class="primary" type="submit">Save protected cash</button></form></article>
+          <article class="panel"><div class="panel-head"><div><p class="eyebrow">PRIVATE IMPORT</p><h2>Import ledger backup</h2></div></div><p class="muted">Choose a Money HQ JSON on your device. It is read locally and written into your signed-in database. Never put the private import JSON in GitHub.</p><div class="stack"><input id="importLedgerFile" type="file" accept=".json,application/json" /><button id="importLedgerBtn" class="primary" type="button">Import into Money HQ</button><p id="importStatus" class="tiny muted">No import loaded yet.</p></div></article>
         </div>
-
-        <div class="two-col">
-          <article class="panel">
-            <div class="panel-head"><div><p class="eyebrow">IMPORT REVIEW</p><h2>Things to verify</h2></div></div>
-            <p class="muted">I preserve the spreadsheet rather than silently deleting suspicious rows. Anything that may be duplicated is listed here for you to verify later.</p>
-            <div id="reviewFlagsList" class="list"></div>
-          </article>
-          <article class="panel">
-            <div class="panel-head"><div><p class="eyebrow">DATA</p><h2>How this version works</h2></div></div>
-            <p id="dataModeText"></p>
-            <p class="muted">Transfers, savings movements, and credit-card payments are excluded from spending reports so card purchases are not double counted. Imported month-only history displays as a month instead of pretending an exact day was recorded.</p>
-          </article>
-        </div>
+        <div class="two-col"><article class="panel"><div class="panel-head"><div><p class="eyebrow">IMPORT REVIEW</p><h2>Things to verify</h2></div></div><div id="reviewFlagsList" class="list"></div></article><article class="panel"><div class="panel-head"><div><p class="eyebrow">DATA</p><h2>How Money HQ counts things</h2></div></div><p id="dataModeText"></p><p class="muted">Transfers and credit-card payments are excluded from spending reports so purchases are not double counted. Goals are tracking-only unless you also record the actual transfer in the checkbook.</p></article></div>
       </section>
     </main>
   </div>
 
-  <dialog id="modal">
-    <div class="modal-head">
-      <div><p class="eyebrow" id="modalEyebrow">MONEY HQ</p><h2 id="modalTitle">Add item</h2></div>
-      <button id="closeModal" class="icon-btn" aria-label="Close">×</button>
-    </div>
-    <div id="modalBody"></div>
-  </dialog>
-
+  <dialog id="modal"><div class="modal-head"><div><p class="eyebrow" id="modalEyebrow">MONEY HQ</p><h2 id="modalTitle">Add item</h2></div><button id="closeModal" class="icon-btn" aria-label="Close">×</button></div><div id="modalBody"></div></dialog>
   <script type="module" src="app.js"></script>
 </body>
 </html>
